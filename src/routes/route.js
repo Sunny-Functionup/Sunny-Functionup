@@ -1,56 +1,87 @@
 const express = require('express');
 const res = require('express/lib/response');
 const router = express.Router();
-
-router.get('test-me', function(req, res) {
-    res.send('My first of all api')
-});
+const app = express.Router();
 
 
-// 1. api to fetch all the movies from any array
+let players = [ 
+    {
+          
+         "name": "poonam",
+         "dob": "1/1/1995",
+         "gender":"female",
+         "city": "jalandhar",
+         "sports": [ " swimming"],
+         "bookings": [
 
-router.get('/Movies', function(req, res) {
-    res.send('["Venom","Dabang","Singham","Run","Endgame"]')
-});
+            {
+                "bookingNumber":1,
+                "sportsId":"",
+                "centreId":"",
+                "type":"private",
+                "slot": "12345",
+                "bookedOn":"31/08/2021",
+                "bookedFor":" 01/09/2021"
+            },
+            {
+                "bookingNumber":2,
+                "sportsId":"",
+                "centreId":"",
+                "type":"private",
+                "slot": "123456",
+                "bookedOn":"31/08/2021",
+                "bookedFor":" 03/09/2021"
+            }
 
-//2. Api to fetch all moviesby indexid from array & if the index is greater than the valid maximum value a message is returned that tells the user to use a valid index in an error message.
+         ]
+  },
+   
+  {
+    "name": "sumit",
+    "dob": "1/3/1998",
+    "gender":"male",
+    "city": "jalandhar",
+    "sports": [ " swimming"],
+    "bookings": [   ]
+},
 
+  {
 
-router.get('/Movies/:movieid', function(req, res) {
-    
-    movie1=["Venom","Dabang","Singham","Run","Endgame"]
-    let value = req.params.movieid;
-    if (value>movie1.length-1){
-        res.send ("this file doesnot exist")
-     } else{
-            res.send(movie1[value])
-        }
-    
-});
-// 3. this api fetch all movies from array of objects
-
-router.get('/movie3', function (req ,res) {
-    res.send([ {id: 1,name: 'The Shining'}, {id: 2,name: 'insidious'},{id: 3,name: 'Mib'},{id: 4,name: 'surahi'},{id: 5,name: 'god father'}])
-});
-
-
-//4.Write another api called GET /films. Instead of an array of strings define an array of movie objects this time. Each movie object should have values - id, name.
-
-router.get('/films/:filmid', function(req, res){
-    let movie2=[ {id: 1,name: 'The Shining'}, {id: 2,name: 'Incendies'}, {id: 3, name: 'Rang de Basanti'}, {id: 4, name: 'Finding fanny'}]  
-    let value= req.params.filmid;   
-    let found=false;
-    for(i=0;i<movie2.length;i++){
-        // console.log(typeof movie2[i].id)
-        // console.log(movie2[i])
-        if( movie2[i].id==value){
-            found=true
-            res.send(movie2[i])
-            break
-        }
+    "name": "sonam",
+    "dob": "1/2/1999",
+    "gender":"female",
+    "city": "jalandhar",
+    "sports": [ " swimming"],
+    "bookings": [  ]
     }
-    if(found==false){
-    res.send("no movie exists with this id")}
-});
 
-module.exports = router
+    ]
+
+
+
+// Part 1 ==>to add a new player in team====================================
+
+let length = players.length;
+
+router.post('/player',function(req,res){
+
+let element = req.body.nplayer.name;
+let newelement = req.body.nplayer
+for (let i=0;i<length;i++){
+    if(element === players[i].name ){
+        console.log(element)
+        res.send("player already exists")
+        
+   
+}
+else if (i === length-1){
+
+    players.push(element)
+    console.log(element)
+    res.send({data :players , status : true})
+    }
+}
+
+})
+
+module.exports = router;
