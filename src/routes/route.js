@@ -1,87 +1,63 @@
 const express = require('express');
-const res = require('express/lib/response');
 const router = express.Router();
-const app = express.Router();
 
 
-let players = [ 
-    {
-          
-         "name": "poonam",
-         "dob": "1/1/1995",
-         "gender":"female",
-         "city": "jalandhar",
-         "sports": [ " swimming"],
-         "bookings": [
+let players = [];
+router.post('/players', function (req, res) {
 
-            {
-                "bookingNumber":1,
-                "sportsId":"",
-                "centreId":"",
-                "type":"private",
-                "slot": "12345",
-                "bookedOn":"31/08/2021",
-                "bookedFor":" 01/09/2021"
-            },
-            {
-                "bookingNumber":2,
-                "sportsId":"",
-                "centreId":"",
-                "type":"private",
-                "slot": "123456",
-                "bookedOn":"31/08/2021",
-                "bookedFor":" 03/09/2021"
+    let player = req.body;
+    let playerName = player.name
+    console.log(playerName)
+
+    for( let i=0; i<players.length; i++) {
+
+        if(players[i].name == playerName) {
+
+            res.send( 'player already exists in listing')
             }
+        }
+        players.push(player);
 
-         ]
-  },
-   
-  {
-    "name": "sumit",
-    "dob": "1/3/1998",
-    "gender":"male",
-    "city": "jalandhar",
-    "sports": [ " swimming"],
-    "bookings": [   ]
-},
+        console.log('here is player array',players);
 
-  {
-
-    "name": "sonam",
-    "dob": "1/2/1999",
-    "gender":"female",
-    "city": "jalandhar",
-    "sports": [ " swimming"],
-    "bookings": [  ]
-    }
-
-    ]
+        res.send(players);
+    } 
+    );
 
 
 
-// Part 1 ==>to add a new player in team====================================
+    router.post('/players/:playerName/bookings/:bookingid', function(req, res){
+        let name = req.params.playerName
 
-let length = players.length;
-
-router.post('/player',function(req,res){
-
-let element = req.body.nplayer.name;
-let newelement = req.body.nplayer
-for (let i=0;i<length;i++){
-    if(element === players[i].name ){
-        console.log(element)
-        res.send("player already exists")
+        let isPlayerPresent=false
+       
         
-   
-}
-else if (i === length-1){
+        for(let i=0;i<players.length;i++){
+            if(players[i].name=name){
+                isPlayerPresent=true
+            }
+        }
+        if(!isPlayerPresent){
+            return res.send('player not present')
+        }
+        let booking = req.body
+        let bookingid = req.params.bookingid
+        
+        for(let i=0; i<players.length;i++){
+            if(players[i].name==name){
+                for(let j=0;j<players[i].bookings.length;j++){
+                    if(players[i].bookings[j].bookingNumber==bookingid){
+                        return res.send("bookingId already present for this player")
+                    }
+                }
+                players[i].bookings.push(booking)
+            }
+        }
+        res.send(players) 
 
-    players.push(element)
-    console.log(element)
-    res.send({data :players , status : true})
-    }
-}
+    })
 
-})
+    module.exports=router;
 
-module.exports = router;
+
+
