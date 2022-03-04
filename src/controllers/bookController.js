@@ -1,24 +1,51 @@
 const { count } = require("console")
 const authorModel = require("../models/authorModel")
 const bookModel= require("../models/bookModel")
+const publisherModel = require("../models/publisherModel")
 
 const createBook= async function (req, res) {
     let book = req.body
-    let bookCreated = await bookModel.create(book)
-    res.send({data: bookCreated})
+    let author_id = req.body.author_id
+    let publisher_id = req.body.publisher_id
+
+    //validation condition a ===============================================================================
+
+    if(!author_id){
+
+    return res.send('The request is not valid as the author id is required.')
+    }
+
+    //Validation condition b=================================================================================
+
+    let author = await authorModel.findById(author_id)
+    if(!author_id) {
+
+     return res.send('no author present with the given id')
+    }
+    //Validation Condition c========================================================================================
+
+    if(!publisher_id){
+
+    return res.send('The request is not valid as the publisher id is required.') 
+    }
+    //validation Condition d======================================================================================
+
+    let publisher = await publisherModel.findById(publisher_id)
+    if(!publisher_id) {
+
+    return res.send('no publisher present with the given id')
 }
 
-const getBooksData= async function (req, res) {
-    let books = await bookModel.find()
+    let bookCreated = await bookModel.create(book)
+    return res.send({data: bookCreated})
+}
+
+const getBooks= async function (req, res) {
+    let books = await bookModel.find().populate('author publisher')
     res.send({data: books})
 }
 
-const getBooksWithAuthorDetails = async function (req, res) {
-    let specificBook = await bookModel.find().populate('author_id')
-    res.send({data: specificBook})
 
-}
-
+ 
 module.exports.createBook= createBook
-module.exports.getBooksData= getBooksData
-module.exports.getBooksWithAuthorDetails = getBooksWithAuthorDetails
+module.exports.getBooks= getBooks
