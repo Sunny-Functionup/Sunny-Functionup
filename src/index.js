@@ -7,6 +7,15 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(function (req, res, next){
+    let current_datetime=new Date();
+
+    let socket =req.socket.remoteAddress
+    let url=req.url;
+    console.log(socket,url,current_datetime)
+    res.send({msg:"Yippee you are in global middleware"})
+})
+
 
 mongoose.connect("mongodb+srv://functionup-cohort:G0Loxqc9wFEGyEeJ@cluster0.rzotr.mongodb.net/Pritesh8769811-DB?retryWrites=true&w=majority", {
     useNewUrlParser: true
