@@ -21,7 +21,8 @@ const tokenChecker = function (req, res, next) {
         } else {return res.send("unauthirised user")
     }
 }
-catch(err){return res.send("invalid token")}
+catch(err)
+{return res.send("invalid token")}
 }
 
 module.exports.tokenChecker = tokenChecker;
