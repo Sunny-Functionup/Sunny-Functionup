@@ -1,5 +1,4 @@
 const mongoose = require("mongoose")
-const validator = require("validator")
 const AuthorModel = mongoose.Schema({
     fname: {
         type: String,
@@ -7,28 +6,22 @@ const AuthorModel = mongoose.Schema({
     },
     lname: {
         type: String,
-        required: true
-    },
+        required: true},
+
     title: {
         type: String,
-        enum: ["Mr", "Mrs", "Miss"]
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        validate(value) {
-            if (!validator.isEmail(value)) {
-                throw new error("Email is invalid")
+         enum: ["Mr", "Mrs", "Miss"],
+         required:true},
 
-            }
-        }
-    },
+    email: {
+        type: String, 
+        lowercase:true,
+        required: true, 
+        unique: true},
+        
     password: {
         type: String,
-        required: true
-    }
-
+        required: true}
 
 }, { timestamps: true })
-module.exports=mongoose.model("authorModel",AuthorModel)
+module.exports=mongoose.model("AuthorModel",AuthorModel)
