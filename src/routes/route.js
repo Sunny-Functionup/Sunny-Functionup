@@ -13,7 +13,6 @@ router.post('/Authorlogin', authorController.LoginAuthor);
 
 // Blog routes
 
-
  router.post('/createblogs', middleware, blogController.CreateBlog);
 
  router.get('/getblogs', middleware, blogController.GetBlogList);

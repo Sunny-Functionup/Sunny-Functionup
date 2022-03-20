@@ -3,80 +3,25 @@ const jwt = require('jsonwebtoken')
 const middleware = async (req, res, next) => {
     try {
         const token = req.header('x-api-key')
-        if(!token) {
-            res.status(403).send({status: false, message: `Missing token request`})
+        if (!token) {
+            res.status(403).send({ status: false, message: ` token request missing here` })
             return;
         }
 
         const decodedtoken = await jwt.verify(token, 'functionup-thorium')
 
-        if(!decodedtoken) {
-            res.status(403).send({status: false, message: `Invalid authentication token in request`})
+        if (!decodedtoken) {
+            res.status(403).send({ status: false, message: `invalid authenticated token in request body` })
             return;
         }
 
         req.authorId = decodedtoken.authorId;
 
         next()
-    } catch (error) {
-        console.error(`Error! ${error.message}`)
-        res.status(500).send({status: false, message: error.message})
+    } catch (err) {
+        console.error(`error ${err.message}`)
+        res.status(500).send({ status: false, message: err.message })
     }
 }
 
 module.exports = middleware
-
-
-
-
-
-// const jwt = require("jsonwebtoken");
-// const BlogModel = require("../models/blogsModel")
-
-// // authentication middleware
-
-// let authenticate = async function (req, res, next) {
-//     try {
-//         let token = req.headers["x-api-key"]
-//         if (!token) {
-//             return res.status(404).send({ msg: "Token must be Present" })
-//         }
-//         next()
-//     }
-//     catch (err) {
-//         console.log(err)
-//         res.status(500).send({ msg: err.message })
-//     }
-// }
-
-// // Authorisation middleware
-// const authorisation = async function (req, res, next) {
-//     try {
-//         let token = req.headers["x-api-key"];
-//         let decodedtoken = jwt.verify(token, "functionup-thorium")
-//         //Make sure that only the owner of the blogs is able to edit or delete the blog.
-//         let toBeupdatedblogId = req.params.blogId
-//         if (toBeupdatedblogId) {
-//             let updatingAuthorId = await BlogModel.find({ _id: toBeupdatedblogId }).select({ authorId: 1, _id: 0 })
-//             let authorId = updatingAuthorId.map(x => x.authorId)
-//             console.log(authorId)
-//             let id = decodedtoken.AuthorId
-//             if (id != authorId) return res.status(403).send({ status: false, msg: "You are not authorised to perform this task" })
-//         }
-//         else {
-//             let AuthorId = req.query.authorId
-//             toBeupdatedblogId = AuthorId
-//             let id = decodedtoken.AuthorId
-//             //In case of unauthorized access return an appropirate error message.
-//             if (id != AuthorId) return res.status(403).send({ status: false, msg: "You are not authorised to perform this task" })
-//         }
-//         next()
-//     }
-//     catch (error) {
-//         console.log(error)
-//         res.status(500).send({ msg: error.message })
-//     }
-// }
-
-// module.exports.authenticate = authenticate;
-// module.exports.authorisation = authorisation;
